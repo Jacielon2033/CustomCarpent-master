@@ -268,7 +268,7 @@ const EstimateGeneratorAdmin = () => {
                   {productImage && (
                     <div className="w-full md:w-1/2">
                       <img
-                        src={`http://localhost:5000${productImage}`}
+                        src={`${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}${productImage}`}
                         alt="Producto"
                         className="w-full h-full object-cover rounded"
                       />

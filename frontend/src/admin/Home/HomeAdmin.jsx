@@ -16,7 +16,7 @@ const HomeAdmin = () => {
   useEffect(() => {
     sections.forEach(async ({ page, key }) => {
       try {
-        const res = await fetch(`http://localhost:5000/api/section/${page}/${key}`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}/api/section/${page}/${key}`);
         const result = await res.json();
 
         setSectionData(prev => ({
@@ -35,7 +35,7 @@ const HomeAdmin = () => {
 
   const handleFormSubmit = async (formData, page, key) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/section/${page}/${key}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}/api/section/${page}/${key}`, {
         method: "POST",
         body: formData,
       });
@@ -43,7 +43,7 @@ const HomeAdmin = () => {
       const result = await res.json();
       console.log(`Sección ${page}/${key} guardada:`, result);
 
-      const updatedRes = await fetch(`http://localhost:5000/api/section/${page}/${key}`);
+      const updatedRes = await fetch(`${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}/api/section/${page}/${key}`);
       const updatedData = await updatedRes.json();
 
       setSectionData(prev => ({

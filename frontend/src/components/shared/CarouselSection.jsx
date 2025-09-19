@@ -77,7 +77,7 @@ const CarouselSection = ({ pageName }) => {
     // Si es del backend (ya guardada), hay que borrarla con DELETE
     if(!img.isNew && img.id){
       try{
-          await fetch(`http://localhost:5000/api/carousel/${pageName}/${img.id}`, {
+          await fetch(`${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}/api/carousel/${pageName}/${img.id}`, {
           method: 'DELETE'
         });
 

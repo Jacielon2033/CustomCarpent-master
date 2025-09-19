@@ -5,7 +5,7 @@ const ExperienceSection = ({ page, customFilter }) => {
   const [sectionData, setSectionData] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/section/${page}/${customFilter}`)
+    fetch(`${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}/api/section/${page}/${customFilter}`)
       .then(res => res.json())
       .then(data => {
         setSectionData({

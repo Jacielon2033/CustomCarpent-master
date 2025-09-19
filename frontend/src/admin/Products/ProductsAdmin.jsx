@@ -17,7 +17,7 @@ const ProductsAdmin = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/products");
+      const res = await fetch("${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}/api/products");
       if (!res.ok) throw new Error("Failed to fetch products");
       const data = await res.json();
       setProducts(data);
@@ -30,8 +30,8 @@ const ProductsAdmin = () => {
   const fetchOptions = async () => {
     try {
       const [colorsRes, sizesRes] = await Promise.all([
-        fetch("http://localhost:5000/api/options/colors"),
-        fetch("http://localhost:5000/api/options/sizes")
+        fetch("${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}/api/options/colors"),
+        fetch("${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}/api/options/sizes")
       ]);
       const colorsData = await colorsRes.json();
       const sizesData = await sizesRes.json();
@@ -44,7 +44,7 @@ const ProductsAdmin = () => {
 
   const fetchProductForEdit = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/products/full/${id}`);
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}/api/products/full/${id}`);
       if (!res.ok) throw new Error("No se pudo cargar el producto");
       const data = await res.json();
 
@@ -269,7 +269,7 @@ const addColor = async () => {
   }
 
   try {
-    const res = await fetch("http://localhost:5000/api/options/colors", {
+    const res = await fetch("${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}/api/options/colors", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newColor)
@@ -299,7 +299,7 @@ const addSize = async () => {
   }
 
   try {
-    const res = await fetch("http://localhost:5000/api/options/sizes", {
+    const res = await fetch("${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}/api/options/sizes", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ label: trimmedSize }),
@@ -325,7 +325,7 @@ const addSize = async () => {
   const handleDelete = async (id) => {
   if (!window.confirm("Are you sure you want to delete this product?")) return;
   try {
-    const res = await fetch(`http://localhost:5000/api/products/${id}`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}/api/products/${id}`, {
       method: "DELETE"
     });
     if (!res.ok) throw new Error("Failed to delete product");
@@ -351,7 +351,7 @@ const handleEdit = async (product) => {
 const deleteColor = async (hexCode) => {
   if (!window.confirm("¿Eliminar este color permanentemente?")) return;
   try {
-    const res = await fetch(`http://localhost:5000/api/options/colors/${encodeURIComponent(hexCode)}`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}/api/options/colors/${encodeURIComponent(hexCode)}`, {
       method: "DELETE"
     });
     if (!res.ok) throw new Error("Error al eliminar color");
@@ -366,7 +366,7 @@ const deleteColor = async (hexCode) => {
 const deleteSize = async (label) => {
   if (!window.confirm("¿Eliminar esta medida permanentemente?")) return;
   try {
-    const res = await fetch(`http://localhost:5000/api/options/sizes/${encodeURIComponent(label)}`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}/api/options/sizes/${encodeURIComponent(label)}`, {
       method: "DELETE"
     });
     if (!res.ok) throw new Error("Error al eliminar medida");
@@ -385,7 +385,7 @@ const updateColor = async () => {
   if (!editingColor) return;
 
   try {
-    const res = await fetch(`http://localhost:5000/api/options/colors/${editingColor.id}`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}/api/options/colors/${editingColor.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(editingColor)
@@ -412,7 +412,7 @@ const updateSize = async () => {
   if (!editingSize || !editedSizeLabel.trim()) return;
 
   try {
-    const res = await fetch(`http://localhost:5000/api/options/sizes/${encodeURIComponent(editingSize)}`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}/api/options/sizes/${encodeURIComponent(editingSize)}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ newLabel: editedSizeLabel })

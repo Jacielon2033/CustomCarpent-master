@@ -7,7 +7,7 @@ const GalleryImages = ({ page, customFilter, title, onImageClick }) => {
   const [images, setImages] = useState([]);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/gallery/${page}/${customFilter}`)
+    fetch(`${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}/api/gallery/${page}/${customFilter}`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data.images)) {

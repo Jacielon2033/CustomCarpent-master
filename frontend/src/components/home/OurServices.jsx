@@ -10,7 +10,7 @@ const OurServices = ({ page }) => {
       try {
         const responses = await Promise.all(
           keys.map(key =>
-            fetch(`http://localhost:5000/api/section/${page}/${key}`)
+            fetch(`${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}/api/section/${page}/${key}`)
               .then(res => res.json())
           )
         );

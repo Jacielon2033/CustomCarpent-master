@@ -43,7 +43,7 @@ const ProductListModal = ({
                                 <div className="flex items-center">
                                     {product.image_path && (
                                         <img 
-                                            src={`http://localhost:5000${product.image_path}`}
+                                            src={`${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}${product.image_path}`}
                                             alt={product.name}
                                             className="w-12 h-12 object-cover rounded border" 
                                         />

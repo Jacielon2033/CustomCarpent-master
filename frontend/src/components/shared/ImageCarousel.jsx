@@ -6,7 +6,7 @@ const ImageCarousel = ({ page }) => {
   const [images, setImages] = useState([]);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/carousel/${page}`)
+    fetch(`${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}/api/carousel/${page}`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data.images)) {

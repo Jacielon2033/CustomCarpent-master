@@ -81,7 +81,7 @@ const FileDrop = ({ onFileSelect, selectedFile, previewImage }) => {
         />
       ) : previewImage ? (
         <img
-          src={`http://localhost:5000${previewImage}`}
+          src={`${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}${previewImage}`}
           alt="Imagen actual"
           className="mt-4 mx-auto h-32 object-contain rounded"
         />

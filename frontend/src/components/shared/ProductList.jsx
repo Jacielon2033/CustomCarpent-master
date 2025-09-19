@@ -46,7 +46,7 @@ const ProductList = ({ products, onAdd }) => {
               className="bg-white rounded-lg shadow-md p-6 grid grid-cols-1 md:grid-cols-2 gap-6 items-start"
             >
               <img
-                src={`http://localhost:5000${product.image_path}`}
+                src={`${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}${product.image_path}`}
                 alt={product.name}
                 className="w-full h-full object-contain"
               />

@@ -7,7 +7,7 @@ const GallerySection = ({ pageName, sectionName }) => {
 
   // Cargar datos del backend
   useEffect(() => {
-    fetch(`http://localhost:5000/api/gallery/${pageName}/${sectionName}`)
+    fetch(`${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}/api/gallery/${pageName}/${sectionName}`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data.images)) {
@@ -34,7 +34,7 @@ const GallerySection = ({ pageName, sectionName }) => {
     });
 
     try {
-      await fetch(`http://localhost:5000/api/gallery/${pageName}/${sectionName}`, {
+      await fetch(`${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}/api/gallery/${pageName}/${sectionName}`, {
         method: 'POST',
         body: formData
       });
@@ -50,7 +50,7 @@ const GallerySection = ({ pageName, sectionName }) => {
     const img = images[index];
     if (!img.isNew && img.id) {
       try {
-        await fetch(`http://localhost:5000/api/gallery/${pageName}/${sectionName}/${img.id}`, {
+        await fetch(`${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}/api/gallery/${pageName}/${sectionName}/${img.id}`, {
           method: 'DELETE'
         });
         alert('✅ Imagen eliminada del servidor');

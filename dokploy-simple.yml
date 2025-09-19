@@ -59,6 +59,8 @@ services:
       dockerfile: Dockerfile
       args:
         - VITE_API_URL=https://api.rtakabinetssolutions.com
+    environment:
+      - VITE_API_URL=https://api.rtakabinetssolutions.com
     container_name: customcarpent-frontend
     restart: unless-stopped
     depends_on:

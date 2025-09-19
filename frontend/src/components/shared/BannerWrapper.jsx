@@ -5,7 +5,7 @@ const BannerWrapper = ({ page, showButton = true }) => {
   const [title, setTitle] = useState('');
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/carousel/${page}`)
+    fetch(`${import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com'}/api/carousel/${page}`)
       .then(res => res.json())
       .then(data => {
         if (data.title) {
