@@ -1,0 +1,11 @@
+# Variables de entorno para Dokploy
+# Copia estas variables en la sección "Environment Variables" de Dokploy
+
+DB_ROOT_PASSWORD=Pa12724110$
+DB_NAME=customcarpent
+DB_USER=root
+DB_PASS=Pa12724110$
+JWT_SECRET=1234abcd5678efgh
+EMAIL_USER=alexholguinmartinez22@gmail.com
+EMAIL_PASS=ehyxjvvhlpmqjctg
+EMAIL_RECEIVER=Carpentry.ido@gmail.com
