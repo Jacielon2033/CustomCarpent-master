@@ -14,12 +14,6 @@ services:
       - ./backend/database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     networks:
       - customcarpent-network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pPa12724110$"]
-      interval: 30s
-      timeout: 10s
-      retries: 10
-      start_period: 60s
     labels:
       - traefik.enable=false
 
@@ -48,14 +42,7 @@ services:
       - customcarpent-network
       - dokploy-network
     depends_on:
-      database:
-        condition: service_started
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5000/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+      - database
     labels:
       - traefik.docker.network=dokploy-network
       - traefik.http.routers.customcarpent-backend.rule=Host(`api.rtakabinetssolutions.com`)
@@ -75,17 +62,10 @@ services:
     container_name: customcarpent-frontend
     restart: unless-stopped
     depends_on:
-      backend:
-        condition: service_started
+      - backend
     networks:
       - customcarpent-network
       - dokploy-network
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
     labels:
       - traefik.docker.network=dokploy-network
       - traefik.http.routers.customcarpent-frontend.rule=Host(`rtakabinetssolutions.com`)
