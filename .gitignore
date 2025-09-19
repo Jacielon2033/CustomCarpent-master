@@ -124,6 +124,10 @@ temp/
 *.7z
 *.tar.gz
 
+# Project specific large files
+backend.zip
+frontend.zip
+
 # Local development
 .local
 .cache
