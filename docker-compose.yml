@@ -15,7 +15,7 @@ services:
       - mysql_data:/var/lib/mysql
       - ./backend/database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     ports:
-      - "3306:3306"
+      - "3307:3306"
     networks:
       - customcarpent-network
 
@@ -41,7 +41,7 @@ services:
     volumes:
       - uploads_data:/app/api/uploads
     ports:
-      - "5000:5000"
+      - "5001:5000"
     networks:
       - customcarpent-network
     depends_on:
@@ -54,11 +54,11 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        - VITE_API_URL=http://localhost:5000
+        - VITE_API_URL=http://localhost:5001
     container_name: customcarpent-frontend
     restart: unless-stopped
     environment:
-      - VITE_API_URL=http://localhost:5000
+      - VITE_API_URL=http://localhost:5001
     ports:
       - "80:80"
     depends_on:
