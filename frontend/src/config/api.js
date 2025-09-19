@@ -1,5 +1,6 @@
 // Configuración centralizada de la API
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://api.rtakabinetssolutions.com';
+// En producción, nginx hace proxy a /api/, así que usamos rutas relativas
+const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
 export const API_ENDPOINTS = {
   // Auth
