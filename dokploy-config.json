@@ -1,0 +1,67 @@
+{
+  "name": "customcarpent",
+  "description": "CustomCarpent - Sistema de gestión de productos y galería",
+  "version": "1.0.0",
+  "services": {
+    "frontend": {
+      "name": "customcarpent-frontend",
+      "domain": "rtakabinetssolutions.com",
+      "port": 80,
+      "buildContext": "./frontend",
+      "dockerfile": "Dockerfile",
+      "environment": {
+        "VITE_API_URL": "https://api.rtakabinetssolutions.com"
+      },
+      "healthCheck": {
+        "path": "/",
+        "interval": 30,
+        "timeout": 10,
+        "retries": 3
+      }
+    },
+    "backend": {
+      "name": "customcarpent-backend",
+      "domain": "api.rtakabinetssolutions.com",
+      "port": 5000,
+      "buildContext": "./backend",
+      "dockerfile": "Dockerfile",
+      "environment": {
+        "NODE_ENV": "production",
+        "DB_HOST": "${DB_HOST}",
+        "DB_USER": "${DB_USER}",
+        "DB_PASS": "${DB_PASS}",
+        "DB_NAME": "${DB_NAME}",
+        "DB_PORT": "${DB_PORT}",
+        "JWT_SECRET": "${JWT_SECRET}"
+      },
+      "volumes": {
+        "uploads_data": "/app/api/uploads"
+      },
+      "healthCheck": {
+        "path": "/api/health",
+        "interval": 30,
+        "timeout": 10,
+        "retries": 3
+      }
+    }
+  },
+  "volumes": {
+    "uploads_data": {
+      "type": "local",
+      "driver": "local"
+    }
+  },
+  "networks": {
+    "customcarpent-network": {
+      "driver": "bridge"
+    }
+  },
+  "ssl": {
+    "enabled": true,
+    "autoRenew": true
+  },
+  "deployment": {
+    "strategy": "rolling",
+    "restartPolicy": "unless-stopped"
+  }
+}

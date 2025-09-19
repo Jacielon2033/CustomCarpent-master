@@ -1,0 +1,59 @@
+# Configuración para Dokploy
+version: '3.8'
+
+services:
+  # Backend API Service
+  backend:
+    image: customcarpent-backend:latest
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: customcarpent-backend
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_NAME=${DB_NAME}
+      - DB_PORT=${DB_PORT:-3306}
+    volumes:
+      - uploads_data:/app/api/uploads
+    networks:
+      - customcarpent-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Frontend Service
+  frontend:
+    image: customcarpent-frontend:latest
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=https://api.rtakabinetssolutions.com
+    container_name: customcarpent-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - customcarpent-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  uploads_data:
+    driver: local
+
+networks:
+  customcarpent-network:
+    driver: bridge
