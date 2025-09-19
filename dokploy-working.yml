@@ -1,0 +1,87 @@
+services:
+  # Base de Datos MySQL
+  database:
+    image: mysql:8.0
+    container_name: customcarpent-database
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=Pa12724110$
+      - MYSQL_DATABASE=customcarpent
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=Pa12724110$
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./backend/database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - customcarpent-network
+
+  # Backend API
+  backend:
+    image: customcarpent-backend:latest
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: customcarpent-backend
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=database
+      - DB_USER=root
+      - DB_PASS=Pa12724110$
+      - DB_NAME=customcarpent
+      - DB_PORT=3306
+      - JWT_SECRET=1234abcd5678efgh
+      - EMAIL_USER=alexholguinmartinez22@gmail.com
+      - EMAIL_PASS=ehyxjvvhlpmqjctg
+      - EMAIL_RECEIVER=Carpentry.ido@gmail.com
+    volumes:
+      - uploads_data:/app/api/uploads
+    networks:
+      - customcarpent-network
+      - dokploy-network
+    depends_on:
+      - database
+    labels:
+      - traefik.docker.network=dokploy-network
+      - traefik.http.routers.customcarpent-backend.rule=Host(`api.rtakabinetssolutions.com`)
+      - traefik.http.routers.customcarpent-backend.entrypoints=web
+      - traefik.http.services.customcarpent-backend.loadbalancer.server.port=5000
+      - traefik.http.routers.customcarpent-backend.service=customcarpent-backend
+      - traefik.enable=true
+
+  # Frontend
+  frontend:
+    image: customcarpent-frontend:latest
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://backend:5000
+    container_name: customcarpent-frontend
+    restart: unless-stopped
+    environment:
+      - VITE_API_URL=http://backend:5000
+    depends_on:
+      - backend
+    networks:
+      - customcarpent-network
+      - dokploy-network
+    labels:
+      - traefik.docker.network=dokploy-network
+      - traefik.http.routers.customcarpent-frontend.rule=Host(`rtakabinetssolutions.com`)
+      - traefik.http.routers.customcarpent-frontend.entrypoints=web
+      - traefik.http.services.customcarpent-frontend.loadbalancer.server.port=80
+      - traefik.http.routers.customcarpent-frontend.service=customcarpent-frontend
+      - traefik.enable=true
+
+volumes:
+  mysql_data:
+    driver: local
+  uploads_data:
+    driver: local
+
+networks:
+  customcarpent-network:
+    driver: bridge
+  dokploy-network:
+    external: true
