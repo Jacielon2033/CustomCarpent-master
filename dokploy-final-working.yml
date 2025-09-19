@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # Base de Datos MySQL
   database:
     image: mysql:8.0
     container_name: customcarpent-database
@@ -19,7 +18,6 @@ services:
     labels:
       - traefik.enable=false
 
-  # Backend API
   backend:
     image: customcarpent-backend:latest
     build:
@@ -42,13 +40,11 @@ services:
       - uploads_data:/app/api/uploads
     networks:
       - customcarpent-network
-      - dokploy-network
     depends_on:
       - database
     labels:
       - traefik.enable=false
 
-  # Frontend
   frontend:
     image: customcarpent-frontend:latest
     build:
