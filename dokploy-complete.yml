@@ -1,0 +1,106 @@
+version: '3.8'
+
+services:
+  # Base de Datos MySQL
+  database:
+    image: mysql:8.0
+    container_name: customcarpent-database
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASS}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./backend/database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - customcarpent-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    labels:
+      - traefik.enable=false
+
+  # Backend API
+  backend:
+    image: customcarpent-backend:latest
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: customcarpent-backend
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=database
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_NAME=${DB_NAME}
+      - DB_PORT=3306
+      - JWT_SECRET=${JWT_SECRET}
+    volumes:
+      - uploads_data:/app/api/uploads
+    networks:
+      - customcarpent-network
+      - dokploy-network
+    depends_on:
+      database:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - traefik.docker.network=dokploy-network
+      - traefik.http.routers.customcarpent-backend.rule=Host(`api.rtakabinetssolutions.com`)
+      - traefik.http.routers.customcarpent-backend.entrypoints=web
+      - traefik.http.services.customcarpent-backend.loadbalancer.server.port=5000
+      - traefik.http.routers.customcarpent-backend.service=customcarpent-backend
+      - traefik.enable=true
+
+  # Frontend
+  frontend:
+    image: customcarpent-frontend:latest
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=https://api.rtakabinetssolutions.com
+    container_name: customcarpent-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - customcarpent-network
+      - dokploy-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - traefik.docker.network=dokploy-network
+      - traefik.http.routers.customcarpent-frontend.rule=Host(`rtakabinetssolutions.com`)
+      - traefik.http.routers.customcarpent-frontend.entrypoints=web
+      - traefik.http.services.customcarpent-frontend.loadbalancer.server.port=80
+      - traefik.http.routers.customcarpent-frontend.service=customcarpent-frontend
+      - traefik.enable=true
+
+volumes:
+  mysql_data:
+    driver: local
+  uploads_data:
+    driver: local
+
+networks:
+  customcarpent-network:
+    driver: bridge
+  dokploy-network:
+    external: true

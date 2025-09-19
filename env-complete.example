@@ -1,0 +1,16 @@
+# Configuración completa para CustomCarpent con base de datos incluida
+
+# Base de Datos MySQL
+DB_ROOT_PASSWORD=tu_password_root_muy_seguro
+DB_NAME=customcarpent
+DB_USER=customcarpent_user
+DB_PASS=tu_password_de_usuario_seguro
+
+# JWT Secret (genera una cadena segura de al menos 32 caracteres)
+JWT_SECRET=tu_jwt_secret_muy_seguro_de_al_menos_32_caracteres
+
+# Email Configuration (opcional)
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=tu_email@gmail.com
+EMAIL_PASS=tu_password_de_email
